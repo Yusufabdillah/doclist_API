@@ -67,6 +67,22 @@ class F_RefAudit extends Library {
         })->add(parent::middleware());
     }
 
+    protected function getDataByDokumen() {
+        $this->app->get($this->pattern, function(Request $request, Response $response) {
+            $dataParsed = $request->getParsedBody();
+            $Fetch = $this->qb->table($this->view)
+                ->where('idDokumen', $dataParsed['idDokumen'])
+                ->get();
+            if (!empty($Fetch)) {
+                return $response->withJson(["status" => "empty" , 'data' => $Fetch], 200);
+            } else if (empty($Fetch)) {
+                return $response->withJson(["status" => "empty"], 200);
+            } else {
+                return $response->withJson(["status" => "failed"], 500);
+            }
+        })->add(parent::middleware());
+    }
+
     protected function getData() {
         $this->app->get($this->pattern.'/{VALUE_DATA}[/{KOLOM}]', function(Request $request, Response $response, $args) {
             $value_data = $args['VALUE_DATA'];
@@ -105,6 +121,20 @@ class F_RefAudit extends Library {
         });
     }
 
+    private function postMultiple() {
+        $this->app->post($this->pattern.'/', function(Request $request, Response $response) {
+            $dataParsed = $request->getParsedBody();
+            $Post = $this->qb
+                ->table($this->tabel)
+                ->insert($dataParsed['data']);
+            if ($Post) {
+                return $response->withJson(["status" => "success"], 200);
+            } else {
+                return $response->withJson(["status" => "failed"], 500);
+            }
+        });
+    }
+
     protected function put() {
         $this->app->put($this->pattern.'/', function(Request $request, Response $response) {
             $dataParsed = $request->getParsedBody();
@@ -135,6 +165,21 @@ class F_RefAudit extends Library {
             $Delete = $this->qb
                 ->table($this->tabel)
                 ->where($this->pk, $dataParsed[$this->pk])
+                ->delete();
+            if ($Delete) {
+                return $response->withJson(["status" => "success"], 200);
+            } else {
+                return $response->withJson(["status" => "failed"], 500);
+            }
+        });
+    }
+
+    protected function deleteByDokumen() {
+        $this->app->delete($this->pattern.'/', function(Request $request, Response $response) {
+            $dataParsed = $request->getParsedBody();
+            $Delete = $this->qb
+                ->table($this->tabel)
+                ->where('idDokumen', $dataParsed['idDokumen'])
                 ->delete();
             if ($Delete) {
                 return $response->withJson(["status" => "success"], 200);
