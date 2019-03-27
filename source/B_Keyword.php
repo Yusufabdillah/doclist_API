@@ -35,7 +35,7 @@ class B_Keyword extends Library {
 
     private function deklarasi($deklarasi)
     {
-        //$deklarasi['view'] = '';
+        $deklarasi['view'] = 'vw_refkeyword';
         $deklarasi['tabel'] = 'tbl_mstkeyword';
         $deklarasi['pk'] = 'idKeyword';
     }
@@ -47,6 +47,22 @@ class B_Keyword extends Library {
                 return $response->withJson($Fetch, 200);
             } else {
                 return $response->withJson(["status" => "failed"], 200);
+            }
+        })->add(parent::middleware());
+    }
+
+    private function getDokumenByKeyword() {
+        $this->app->get($this->pattern, function(Request $request, Response $response) {
+            $dataParsed = $request->getParsedBody();
+            $Fetch = $this->qb->table($this->view)
+                ->whereRaw($dataParsed['whereRaw'])
+                ->distinct()->get();
+            if (!empty($Fetch)) {
+                return $response->withJson(["status" => "success" , 'data' => $Fetch], 200);
+            } else if (empty($Fetch)) {
+                return $response->withJson(["status" => "empty"], 200);
+            } else {
+                return $response->withJson(["status" => "failed"], 500);
             }
         })->add(parent::middleware());
     }
@@ -84,7 +100,7 @@ class B_Keyword extends Library {
                 ->where('idDokumen', $dataParsed['idDokumen'])
                 ->get();
             if (!empty($Fetch)) {
-                return $response->withJson(["status" => "empty" , 'data' => $Fetch], 200);
+                return $response->withJson(["status" => "success" , 'data' => $Fetch], 200);
             } else if (empty($Fetch)) {
                 return $response->withJson(["status" => "empty"], 200);
             } else {
