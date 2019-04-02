@@ -44,6 +44,23 @@ class B_User extends Library {
         })->add(parent::middleware());
     }
 
+    private function getDataByDepartemen() {
+        $this->app->get($this->pattern, function(Request $request, Response $response) {
+            $dataParsed = $request->getParsedBody();
+            $Fetch = $this->qb->table('tbl_mstuser')
+                ->where('idDepartemen', $dataParsed['idDepartemen'])
+                ->where('idGrup', '<', 3)
+                ->get();
+            if (!empty($Fetch)) {
+                return $response->withJson(['status' => 'success', 'data' => $Fetch], 200);
+            } else if (empty($Fetch)) {
+                return $response->withJson(['status' => 'empty'], 200);
+            } else {
+                return $response->withJson(["status" => "failed"], 500);
+            }
+        })->add(parent::middleware());
+    }
+
     protected function getData() {
         $this->app->get($this->pattern.'/{VALUE_DATA}[/{KOLOM}]', function(Request $request, Response $response, $args) {
             $value_data = $args['VALUE_DATA'];
