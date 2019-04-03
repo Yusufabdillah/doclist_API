@@ -82,6 +82,24 @@ class F_Dokumen extends Library {
         })->add(parent::middleware());
     }
 
+    private function cekCaseNumber() {
+        $this->app->get($this->pattern, function(Request $request, Response $response) {
+            $dataParsed = $request->getParsedBody();
+            $Fetch = $this->qb
+                ->table($this->view)
+                ->select('idDokumen', 'casenumberDokumen')
+                ->where('casenumberDokumen', $dataParsed['casenumberDokumen'])
+                ->get();
+            if ($Fetch == '[]') {
+                return $response->withJson('tidak_ada_yang_sama', 200);
+            } else if ($Fetch !== '[]') {
+                return $response->withJson('ada_yang_sama', 200);
+            } else {
+                return $response->withJson(["status" => "failed"], 500);
+            }
+        })->add(parent::middleware());
+    }
+
     protected function getData() {
         $this->app->get($this->pattern.'/{VALUE_DATA}[/{KOLOM}]', function(Request $request, Response $response, $args) {
             $value_data = $args['VALUE_DATA'];
