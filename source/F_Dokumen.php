@@ -44,7 +44,7 @@ class F_Dokumen extends Library {
         $this->app->get($this->pattern, function(Request $request, Response $response) {
             $Fetch = $this->qb->table($this->view)->get();
             if ($Fetch) {
-                return $response->withJson($Fetch, 200);
+                return $response->withJson(['data' => $Fetch], 200);
             } else {
                 return $response->withJson(["status" => "failed"], 200);
             }
@@ -59,7 +59,7 @@ class F_Dokumen extends Library {
                           ->where('idDepartemen', $dataParsed['idDepartemen'])
                           ->get();
             if ($Fetch) {
-                return $response->withJson($Fetch, 200);
+                return $response->withJson(['data' => $Fetch], 200);
             } else {
                 return $response->withJson(["status" => "failed"], 200);
             }
@@ -139,7 +139,7 @@ class F_Dokumen extends Library {
              $Query = "Select * from vw_mstdokumen where tglAwal is not null and tgl_habisDokumen is not null and ((awalReminder !=0 and tglAwal <= NOW()) or(awalReminder =0 and tglAwalDefault <= NOW()))";
             $Fetch = $this->db->query($Query)->fetchAll(PDO::FETCH_OBJ);
             if ($Fetch) {
-                return $response->withJson($Fetch, 200);
+                return $response->withJson(['data' => $Fetch], 200);
             } else {
                 return $response->withJson(["status" => "failed"], 200);
             }
@@ -158,7 +158,7 @@ class F_Dokumen extends Library {
             $Query = "Select * from vw_mstdokumen where tglAwal is not null and tgl_habisDokumen is not null and ((awalReminder !=0 and tglAwal <= NOW()) or(awalReminder =0 and tglAwalDefault <= NOW())) and idDepartemen = $dataParsed[idDepartemen]";
             $Fetch = $this->db->query($Query)->fetchAll(PDO::FETCH_OBJ);
             if ($Fetch) {
-                return $response->withJson($Fetch, 200);
+                return $response->withJson(['data' => $Fetch], 200);
             } else {
                 return $response->withJson(["status" => "failed"], 200);
             }

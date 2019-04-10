@@ -58,7 +58,7 @@ class F_RefAudit extends Library {
                               ->where('idAudit', $dataParsed['idAudit'])
                               ->get();
             if (!empty($Fetch)) {
-                return $response->withJson($Fetch, 200);
+                return $response->withJson(['data' => $Fetch], 200);
             } else if (empty($Fetch)) {
                 return $response->withJson(["status" => "empty"], 200);
             } else {

@@ -37,7 +37,7 @@ class B_Audit extends Library {
             $Query = "CALL sp_mstaudit('getAll', NULL, NULL, NULL, NULL, NULL, NULL);";
             $Fetch = $this->db->query($Query)->fetchAll(PDO::FETCH_OBJ);
             if ($Fetch) {
-                return $response->withJson($Fetch, 200);
+                return $response->withJson(['data' => $Fetch], 200);
             } else {
                 return $response->withJson(["status" => "failed"], 200);
             }
