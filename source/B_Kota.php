@@ -31,7 +31,7 @@ class B_Kota extends Library {
         self::$function();
         return $this->app->run();
     }
-
+    
     protected function getAll() {
         $this->app->get($this->pattern, function(Request $request, Response $response) {
             $Query = "CALL sp_mstkota(

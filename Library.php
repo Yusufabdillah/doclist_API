@@ -110,6 +110,8 @@ class Library extends Settings {
         return base64_decode($data);
     }
 
+    protected function cekOtorisasi() {}
+
     protected function getAll() {}
 
     protected function getData() {}

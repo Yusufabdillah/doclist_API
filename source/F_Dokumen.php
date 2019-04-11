@@ -75,7 +75,7 @@ class F_Dokumen extends Library {
                 ->where('se_ajuan_statusDokumen', true)
                 ->get();
             if ($Fetch) {
-                return $response->withJson($Fetch, 200);
+                return $response->withJson(['data' => $Fetch], 200);
             } else {
                 return $response->withJson(["status" => "failed"], 200);
             }

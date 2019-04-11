@@ -30,7 +30,7 @@ class B_Akses extends Library {
         parent::__construct();
         self::$function();
         return $this->app->run();
-    }
+    }   
 
     protected function getAll() {
         $this->app->get($this->pattern, function(Request $request, Response $response) {

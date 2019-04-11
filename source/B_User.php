@@ -32,6 +32,12 @@ class B_User extends Library {
         return $this->app->run();
     }
 
+    protected function cekOtorisasi() {
+        $this->app->get($this->pattern, function(Request $request, Response $response) {
+            return $response->withJson(['status' => 'OK'],200);
+        })->add(parent::middleware());
+    }
+
     protected function getAll() {
         $this->app->get($this->pattern, function(Request $request, Response $response) {
             $Query = "CALL sp_mstuser('getAll', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);";
