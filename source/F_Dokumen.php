@@ -100,6 +100,42 @@ class F_Dokumen extends Library {
         })->add(parent::middleware());
     }
 
+    private function cekNomorDokumen() {
+        $this->app->get($this->pattern, function(Request $request, Response $response) {
+            $dataParsed = $request->getParsedBody();
+            $Fetch = $this->qb
+                ->table($this->view)
+                ->select('idDokumen', 'nomorDokumen')
+                ->where('nomorDokumen', $dataParsed['nomorDokumen'])
+                ->first();
+            if ($Fetch) {
+                if ($Fetch->idDokumen == $dataParsed['idDokumen']) {
+                    if ($Fetch->nomorDokumen == $dataParsed['nomorDokumen']) {
+                         return $response->withJson(['status' => "idDokumen_Sama-nomorDokumen_Sama"], 200);
+                    }
+                     
+                    //ini tidak dipakai hanya untuk jaga2 saja
+                    else if ($Fetch->nomorDokumen !== $dataParsed['nomorDokumen']) {
+                         return $response->withJson(['status' => "idDokumen_Sama-nomorDokumen_Tidak_Sama"], 200);
+                    }
+                } else if ($Fetch->idDokumen !== $dataParsed['idDokumen']) {
+                    if ($Fetch->nomorDokumen == $dataParsed['nomorDokumen']) {
+                        return $response->withJson(['status' => "idDokumen_Tidak_Sama-nomorDokumen_Sama"], 200);
+                    } 
+
+                    //ini tidak dipakai hanya untuk jaga2 saja
+                    else if ($Fetch->nomorDokumen !== $dataParsed['nomorDokumen']) {
+                        return $response->withJson(['status' => "idDokumen_Tidak_Sama-nomorDokumen_Tidak_Sama"], 200);
+                    }
+                }
+            } else if (!$Fetch) {
+                return $response->withJson(["status" => "OK"], 200);
+            } else {
+                return $response->withJson(["status" => "Failed"], 500);
+            }
+        });
+    }
+
     protected function getData() {
         $this->app->get($this->pattern.'/{VALUE_DATA}[/{KOLOM}]', function(Request $request, Response $response, $args) {
             $value_data = $args['VALUE_DATA'];
